@@ -28,6 +28,19 @@ def seconds(match):
     "Takes a 3-tuple of strings for hour/min/sec, eg ('12','01','30') and returns the seconds since 00:00:00"
     return int_or_none(match, 0) * 3600 + int_or_none(match, 1) * 60 + (int_or_none(match, 2) or 0)
 
+"""
+sequences is a list of objects describing everyday sequences. 
+Each object should have a 'matches' property which is either
+a set of strings, giving each element in the sequence to match
+against, or a callable() that takes an example entry, and returns
+the sequence index for that entry. Sequence descriptors can
+also have a 'finder' property which is the inverse of 'matches'
+ie. a callable that returns a sequence element given a sequence
+index. If a sequence descriptor defines 'repeats', and a 
+'repeat_length', any calculated sequence indices will be mod'd 
+to the repeat length before being converted back to sequence
+elements. 
+"""
 sequences = [
         {'name': 'integers', 'repeats': False, 'matches':lambda test_value: int(err_none( lambda regex, value: re.match(regex, value).groups())('([+\-]?\d+$)', test_value)[0]), 'finder': lambda x: x},
         {'name': 'floats', 'repeats': False, 'matches': lambda test_value: float(err_none( lambda regex, value: re.match(regex, value).groups())('([+\-]?\d+\.\d+$)', test_value)[0]), 'finder': lambda x: x},
